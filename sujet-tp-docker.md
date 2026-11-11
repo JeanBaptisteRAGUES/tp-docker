@@ -706,7 +706,9 @@ Un conteneur en production doit idéalement être reproductible à partir d'une 
 
 1. Les réponses argumentées aux questions.
 2. Une courte conclusion sur les améliorations apportées à l'image et à la sécurité du conteneur.
+Ce TP a permis d'améliorer l'image Docker en utilisant une construction multi-stage. Cette approche permet de séparer l'environnement de compilation de l'environnement d'exécution et de ne conserver dans l'image finale que les éléments nécessaires, notamment l'exécutable. L'image est ainsi plus légère, ce qui réduit l'espace de stockage et la surface d'attaque.
 
+La sécurité du conteneur a également été renforcée grâce à plusieurs mesures : exécution avec un utilisateur non privilégié, système de fichiers en lecture seule, utilisation d'un espace temporaire limité avec tmpfs, suppression des capacités Linux inutiles et activation de no-new-privileges. Ces protections limitent les possibilités d'action d'un processus compromis et réduisent les risques liés à l'exécution du conteneur.
 ---
 
 **Fin du TP Docker avancé**
