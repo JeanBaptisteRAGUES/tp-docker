@@ -510,10 +510,23 @@ docker rm diagnostic-test
 ### Questions
 
 1. Quelle différence existe-t-il entre un conteneur arrêté et un conteneur supprimé ?
+Un conteneur arrêté existe toujours dans Docker, mais son processus principal ne s'exécute plus.
+Un conteneur supprimé, en revanche, n'existe plus dans Docker. Ses métadonnées et sa couche inscriptible sont supprimées. Il n'est donc plus possible de consulter ses journaux ou de le redémarrer.
+
 2. Que signifie un code de sortie différent de zéro ?
+Un code de sortie différent de zéro indique généralement que le processus s'est terminé avec une erreur ou qu'une situation particulière s'est produite.
+
 3. Quelle différence existe-t-il entre les sorties standard et d'erreur ?
+stdout (sortie standard) : utilisée pour afficher les résultats normaux d'un programme.
+stderr (sortie d'erreur) : utilisée pour afficher les messages d'erreur, les avertissements ou les informations de diagnostic.
+
 4. Pourquoi les journaux sont-ils utiles lorsqu'un conteneur se termine trop rapidement ?
+Lorsqu'un conteneur se termine rapidement, il peut être difficile d'observer directement ce qui s'est passé pendant son exécution.
+Les journaux permettent de consulter les messages envoyés sur stdout et stderr afin de comprendre les dernières opérations effectuées et d'identifier une éventuelle erreur.
+
 5. Pourquoi faut-il examiner le code de sortie au lieu de se fier uniquement au message d'erreur ?
+Le message d'erreur fournit des informations sur le problème rencontré, mais il ne permet pas toujours de déterminer précisément comment le processus s'est terminé.
+Le code de sortie fournit une information supplémentaire et exploitable par les outils de supervision et les scripts.
 
 ---
 
