@@ -66,10 +66,28 @@ docker rm processus-test processus-test-2
 ### Questions
 
 1. Quel est le rôle du processus principal dans un conteneur ?
+Le rôle du processus principal dans un conteneur est d'en être le point d'entrée de son exécution et de déterminer 
+son cycle de vie :
+- Tant qu'il est actif, le conteneur reste en fonctionnement
+- Lorsqu'il se termine, le conteneur s'arrête
+Il est également le destinataire des signaux envoyés par Docker lors des opérations d'arrêt.
+
 2. Quelle différence existe-t-il entre `docker stop` et `docker kill` ?
+- docker stop demande un arrêt progressif du conteneur. Il envoie d'abord SIGTERM au processus principal, lui laissant le temps de terminer proprement. Si le processus ne s'arrête pas dans le délai imparti, Docker envoie automatiquement SIGKILL.
+- docker kill envoie directement un signal au processus principal. Par défaut, ce signal est SIGKILL, mais il est possible d'en choisir un autre avec l'option --signal.
+
 3. Pourquoi un conteneur s'arrête-t-il lorsque son processus principal se termine ?
+Docker utilise le processus principal (PID 1) pour déterminer l'état du conteneur.
+Lorsque le processus principal se termine, Docker considère que l'exécution du conteneur est terminée.
+
 4. Quelle différence existe-t-il entre `SIGTERM` et `SIGKILL` ?
+SIGTERM : demande au processus de se terminer. Il peut intercepter ce signal et effectuer des opérations avant de s'arrêter, comme sauvegarder des données ou fermer des connexions. Il peut également ignorer ce signal.
+
+SIGKILL : force immédiatement la terminaison du processus. Il ne peut être ni intercepté, ni ignoré, ni bloqué.
+
 5. Pourquoi est-il important qu'une application gère correctement les signaux d'arrêt ?
+Il est important qu'une application gère correctement les signaux d'arrêt afin de pouvoir terminer son exécution proprement.
+Sans cette gestion, une application risque d'être arrêtée brutalement par SIGKILL, ce qui peut entraîner une perte de données, des opérations incomplètes ou des ressources qui n'ont pas été correctement libérées.
 
 ## Exercice 2 — Comprendre les couches d'une image et le système de fichiers
 
