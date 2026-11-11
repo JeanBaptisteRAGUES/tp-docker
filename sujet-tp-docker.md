@@ -603,10 +603,22 @@ docker rm -f logs-test
 ### Questions
 
 1. Pourquoi des journaux trop volumineux peuvent-ils poser problème ?
+Des journaux trop volumineux peuvent consommer une quantité importante d'espace disque sur la machine hôte.
+Si leur taille augmente continuellement, ils peuvent finir par saturer le stockage disponible.
+
 2. À quoi sert un pilote de journaux Docker ?
+Un pilote de journaux (logging driver) détermine la manière dont Docker collecte, stocke et éventuellement transmet les journaux produits par les conteneurs.
+
 3. Quelle différence existe-t-il entre la consultation des journaux avec `docker logs` et leur stockage sur le long terme ?
+La commande docker logs permet de consulter les journaux associés à un conteneur, notamment les messages envoyés sur stdout et stderr.
+Le stockage sur le long terme répond à un autre objectif : conserver les journaux pendant une période prolongée afin de pouvoir effectuer des analyses historiques, des audits ou rechercher des incidents passés.
+
 4. Pourquoi la rotation des journaux est-elle importante sur un serveur ?
+La rotation des journaux permet de limiter l'espace disque utilisé par les fichiers de journalisation.
+Lorsqu'un fichier atteint une certaine taille, il est remplacé ou archivé selon la stratégie de rotation configurée
+
 5. Pourquoi faut-il choisir une stratégie de journalisation adaptée à l'environnement de production ?
+Une stratégie adaptée permet de maîtriser l'utilisation du stockage tout en conservant les informations nécessaires à la maintenance, à la sécurité et au diagnostic des applications
 
 ---
 
@@ -666,10 +678,27 @@ docker rm -f inspection-test
 ### Questions
 
 1. Quelle différence existe-t-il entre `docker exec` et `docker run` ?
+docker run crée et démarre un conteneur, tandis que docker exec permet d'interagir avec un conteneur déjà en fonctionnement.
+
 2. À quoi sert `docker top` ?
+La commande docker top permet d'afficher la liste des processus actuellement exécutés dans un conteneur.
+
 3. Pourquoi `docker diff` peut-il être utile pendant un diagnostic ?
+La commande docker diff permet d'identifier les modifications apportées au système de fichiers d'un conteneur depuis sa création, par comparaison avec son image initiale.
+Elle epeut être utile pour repérer des modifications inattendues, vérifier les fichiers créés par une application ou identifier des changements manuels effectués dans un conteneur.
+
 4. Quelles informations fournit `docker stats` ?
+La commande docker stats fournit des statistiques sur l'utilisation des ressources d'un conteneur en fonctionnement.
+Elle affiche notamment :
+- CPU % : pourcentage d'utilisation du processeur.
+- MEM USAGE / LIMIT : mémoire utilisée et limite mémoire.
+- MEM % : pourcentage de mémoire utilisée par rapport à la limite.
+- NET I/O : quantité de données réseau reçues et envoyées.
+- BLOCK I/O : quantité de données lues et écrites sur les périphériques de stockage.
+- PIDS : nombre de processus présents dans le conteneur.
+
 5. Pourquoi faut-il éviter de modifier manuellement un conteneur en production sans documenter les changements ?
+Un conteneur en production doit idéalement être reproductible à partir d'une configuration connue, plutôt que dépendre de modifications manuelles réalisées pendant son fonctionnement.
 
 ---
 
