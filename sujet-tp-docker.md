@@ -182,10 +182,25 @@ La modification précédente n'est pas présente dans ce nouveau conteneur.
 ### Questions
 
 1. Quelle différence existe-t-il entre les couches d'une image et la couche inscriptible d'un conteneur ?
+Une image Docker est constituée de plusieurs couches (en lecture seule) de fichiers empilées les unes sur les autres.
+Lorsqu'un conteneur est créé à partir d'une image, Docker ajoute une couche inscriptible au-dessus de ces couches. Cette couche permet d'enregistrer les modifications effectuées pendant l'exécution du conteneur, sans modifier les couches originales de l'image.
+
 2. À quoi sert le mécanisme *copy-on-write* ?
+Le mécanisme copy-on-write permet de partager les couches en lecture seule d'une image entre plusieurs conteneurs, sans avoir besoin de dupliquer l'intégralité de leur système de fichiers.
+Ce mécanisme permet donc d'économiser de l'espace disque et d'éviter de dupliquer inutilement les données.
+
 3. Pourquoi les modifications effectuées dans un conteneur ne modifient-elles pas directement l'image d'origine ?
+Les couches constituant une image Docker sont en lecture seule. Un conteneur ne peut donc pas les modifier directement.
+Toutes les modifications effectuées pendant son exécution sont enregistrées dans sa propre couche inscriptible, située au-dessus des couches de l'image.
+Cela permet de conserver l'image d'origine intacte et de créer plusieurs conteneurs indépendants à partir d'une même image.
+
 4. À quoi sert la commande `docker diff` ?
+La commande docker diff permet d'identifier les modifications apportées au système de fichiers d'un conteneur depuis sa création.
+Elle affiche les fichiers et répertoires ajoutés, modifiés ou supprimés par rapport à l'image d'origine.
+
 5. Pourquoi les modifications apportées à la couche inscriptible sont-elles perdues lorsqu'on supprime le conteneur ?
+La couche inscriptible appartient exclusivement au conteneur. Lorsqu'on le supprime, Docker supprime également cette couche et les modifications qu'elle contient.
+Les couches originales de l'image ne sont pas affectées puisqu'elles sont indépendantes du conteneur.
 
 ---
 
