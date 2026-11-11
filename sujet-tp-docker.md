@@ -321,10 +321,30 @@ docker rm -f application-go-test
 ### Questions
 
 1. Pourquoi utiliser plusieurs instructions `FROM` ?
+L'utilisation de plusieurs instructions FROM permet de créer plusieurs étapes de construction indépendantes au sein d'un même Dockerfile.
+Ça permet notamment de séparer l'environnement nécessaire à la compilation d'une application de celui nécessaire à son exécution.
+Ça permet donc de réduire la taille de l'image finale et de ne pas embarquer les outils de compilation qui ne sont plus nécessaires à l'exécution.
+
 2. Quelle différence existe-t-il entre l'étape `builder` et l'étape finale ?
+L'étape builder correspond à l'environnement de compilation.
+L'étape finale correspond à l'environnement d'exécution.
+
+
 3. Pourquoi l'image finale ne contient-elle pas le compilateur Go ?
+Le compilateur Go est uniquement nécessaire pendant la phase de construction de l'application.
+Le compilateur Go et les autres éléments de l'environnement de compilation ne sont donc pas copiés dans l'image finale.
+Ça permet de réduire considérablement la taille de l'image.
+
 4. Quels sont les avantages d'une image finale minimale ?
+Une image finale minimale présente plusieurs avantages :
+- Réduction de la taille : elle nécessite moins d'espace disque et consomme moins de bande passante lors de son transfert.
+- Déploiement plus rapide : son téléchargement et son déploiement sont généralement plus rapides.
+- Sécurité renforcée : elle contient moins de composants susceptibles de présenter des vulnérabilités.
+- Surface d'attaque réduite : l'absence d'outils système classiques et de shell limite les possibilités d'exploitation en cas de compromission du conteneur.
+- Maintenance simplifiée : moins de composants signifie également moins d'éléments à mettre à jour.
+
 5. Quelles précautions faut-il prendre avant d'utiliser une image `scratch` en production ?
+L'image scratch étant totalement vide, il faut s'assurer que l'application peut fonctionner sans système d'exploitation complet ni outils supplémentaires, notamment avec des tests.
 
 ---
 
@@ -405,10 +425,26 @@ Remplacez `NOM_DU_CONTENEUR` par le nom d'un conteneur actif créé pour cette v
 ### Questions
 
 1. Pourquoi est-il préférable d'exécuter une application avec un utilisateur non privilégié ?
+Il est préférable d'exécuter une application avec un utilisateur non privilégié afin de limiter les conséquences d'une éventuelle faille de sécurité.
+
 2. Que sont les capacités Linux ?
+Les capacités Linux (Linux capabilities) sont un mécanisme permettant de diviser les privilèges traditionnellement associés à l'utilisateur root en plusieurs permissions indépendantes.
+Au lieu d'accorder tous les privilèges administrateur à un processus, on peut lui attribuer uniquement certaines capacités.
+
 3. Quelle différence existe-t-il entre `--read-only` et `--tmpfs` ?
+Ces deux options ont des rôles complémentaires :
+- --read-only rend le système de fichiers racine du conteneur non modifiable. Les processus ne peuvent donc plus écrire librement dans les répertoires du système.
+- --tmpfs crée un espace temporaire inscriptible en mémoire, qui permet aux applications de stocker temporairement des fichiers.
+
 4. Pourquoi un conteneur peut-il avoir besoin de zones inscriptibles malgré un système de fichiers racine en lecture seule ?
+Certaines applications ont besoin d'écrire des fichiers pendant leur fonctionnement.
+Rendre l'ensemble du système de fichiers inscriptible n'est pas nécessaire pour répondre à ces besoins.
+On peut donc conserver une racine en lecture seule tout en autorisant l'écriture dans des emplacements précis, par exemple avec --tmpfs ou des volumes Docker.
+Cela permet de limiter les modifications possibles tout en conservant le fonctionnement de l'application.
+
 5. Ces options suffisent-elles à garantir une isolation parfaite ? Justifiez votre réponse.
+Non, ces options renforcent la sécurité du conteneur, mais ne garantissent pas une isolation parfaite
+Cependant, les conteneurs Docker partagent le noyau Linux de la machine hôte. Une vulnérabilité du noyau ou du moteur Docker pourrait donc compromettre l'isolation entre le conteneur et l'hôte
 
 ---
 
